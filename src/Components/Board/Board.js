@@ -45,16 +45,26 @@ export default class Board extends React.Component {
 
     componentDidMount() {
         this.props.socket.on('selectCellResponse', data => {
-            // console.log(data);
-            this.setState({
-                squares: data.gameState,
-                gameData: data.gameData
-            });
+            if (data.gameData.player1 == data.gameData.whose_turn){
+                this.setState({
+                    whiteIsCurrent:true,
+                    squares: data.gameState,
+                    gameData: data.gameData
+                });
+            }else{
+                this.setState({
+                    whiteIsCurrent:false,
+                    squares: data.gameState,
+                    gameData: data.gameData
+                });
+            }
+            
+            
         });
     }
 
     renderSquare(row, col) {
-        console.log(this.currentMove, this.props)
+        //console.log(this.currentMove, this.props)
         return (< Square className={
             this.isHighlighted(row, col) ? 'gray square' :
                 (row + col) % 2 === 0 ? 'black square' : 'white square'
@@ -199,6 +209,7 @@ export default class Board extends React.Component {
             }
 
             pieceIsMoving = false;
+
             // resets possible moves and highlighted pieces after a move is made
             possibleMoves = {};
             highlightedPieces = [];
